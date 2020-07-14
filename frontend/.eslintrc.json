@@ -30,8 +30,11 @@
     ],
     "rules": {
       "prettier/prettier": "error",
+      "@typescript-eslint/ban-types": "off",
+      "no-unused-expressions": "off",
+      "react/jsx-indent-props": "off",
+      "import/no-extraneous-dependencies": "off",
       "react-hooks/rules-of-hooks": "error",
-      "react/jsx-ident-props":  [4, "tab"],
       "react/jsx-indent": "off",
       "react-hooks/exhaustive-deps": "warn",
       "react/prop-types": "off",
