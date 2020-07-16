@@ -29,6 +29,8 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "react/jsx-indent": "off",
+        "react/jsx-indent-props": "off",
         "react-hooks/rules-of-hooks": "error",
         "prettier/prettier": "error",
         "react-hooks/exhaustive-deps": "warn",
