@@ -20,7 +20,7 @@ export const Container = styled.div`
         transform: translateX(-50%);
 
         background: #ff9000;
-        color:#312e38;
+        color: #312e38;
 
         &::before {
             content: '';
