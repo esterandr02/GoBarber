@@ -3,6 +3,7 @@ import { getRepository, Repository, Raw } from 'typeorm';
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import ICreateAppointmentsDTO from '@modules/appointments/dtos/ICreateAppointmentsDTO';
 import IListProviderDaysAvailableDTO from '@modules/appointments/dtos/IListProviderDaysAvailableDTO';
+import IListProviderHoursAvailableDTO from '@modules/appointments/dtos/IListProviderHoursAvailableDTO';
 
 import Appointment from '../entities/Appointment';
 
@@ -48,6 +49,27 @@ export default class AppointmentsRepository implements IAppointmentsRepository {
             },
         });
 
+        return appointments;
+    }
+
+    public async findHoursAvailableInDay({
+        provider_id,
+        day,
+        month,
+        year,
+    }: IListProviderHoursAvailableDTO): Promise<Appointment[]> {
+        const parsedDay = String(day).padStart(2, '0');
+        const parsedMonth = String(month).padStart(2, '0');
+
+        const appointments = await this.ormRepository.find({
+            where: {
+                provider_id,
+                date: Raw(
+                    dateFieldName =>
+                        `to_char(${dateFieldName}, 'DD-MM-YYYY') = '${parsedDay}-${parsedMonth}-${year}`,
+                ),
+            },
+        });
         return appointments;
     }
 }
