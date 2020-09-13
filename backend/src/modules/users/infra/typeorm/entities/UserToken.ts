@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 @Entity('user_tokens') // Entidade na tabela
-class UserToken {
+export default class UserToken {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -27,5 +27,3 @@ class UserToken {
 }
 // Nao e necessario um constructor, pois ja ha uma relacao de criacao no banco
 // Nao e necessario ter uma inicializacao dos models
-
-export default UserToken;

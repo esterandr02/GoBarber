@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useRef } from 'react';
 import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
@@ -11,13 +11,12 @@ import {
     ScrollView,
     TextInput,
     Alert,
-    Keyboard,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
 import { Container, Title, BackToSignIn, BackToSignInText } from './styles';
 
-import Input from '../../components/Input';
+import Input, { SetKeyboardState } from '../../components/Input';
 import Button from '../../components/Button';
 
 import logoImg from '../../assets/logo.png';
@@ -78,16 +77,8 @@ const SignUp: React.FC = () => {
         [navigation],
     );
 
-    const [keyboard, setKeyboard] = useState(false);
-
-    useEffect(() => {
-        Keyboard.addListener('keyboardDidShow', () => {
-            setKeyboard(true);
-        });
-        Keyboard.addListener('keyboardDidHide', () => {
-            setKeyboard(false);
-        });
-    }, []);
+    const setKeyboardState = SetKeyboardState();
+    const keyboard = setKeyboardState;
 
     return (
         <>

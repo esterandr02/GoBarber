@@ -3,10 +3,10 @@ import { addHours, isAfter } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 
-import IUserRepository from '../repositories/IUserRepository';
-import IUserTokenRepository from '../repositories/IUserTokenRepository';
+import IUsersRepository from '../repositories/IUsersRepository';
+import IUserTokensRepository from '../repositories/IUserTokensRepository';
 
-import IHashPassword from '../providers/Hash/model/IHashPassword';
+import IHashProvider from '../providers/Hash/model/IHashProvider';
 
 interface IRequest {
     token: string;
@@ -16,24 +16,24 @@ interface IRequest {
 @injectable()
 class ResetPasswordService {
     constructor(
-        @inject('UserRepo')
-        private userRepository: IUserRepository,
+        @inject('UsersRepository')
+        private usersRepository: IUsersRepository,
 
-        @inject('UserTokenRepo')
-        private userTokenRepository: IUserTokenRepository,
+        @inject('UserTokensRepository')
+        private userTokensRepository: IUserTokensRepository,
 
         @inject('HashProvider')
-        private hashProvider: IHashPassword,
+        private hashProvider: IHashProvider,
     ) {}
 
     public async execute({ token, password }: IRequest): Promise<void> {
-        const userToken = await this.userTokenRepository.findByToken(token);
+        const userToken = await this.userTokensRepository.findByToken(token);
 
         if (!userToken) {
             throw new AppError('Token does not exist');
         }
 
-        const user = await this.userRepository.findById(userToken.user_id);
+        const user = await this.usersRepository.findById(userToken.user_id);
 
         if (!user) {
             throw new AppError('User does not exist');
@@ -47,7 +47,7 @@ class ResetPasswordService {
         }
 
         user.password = await this.hashProvider.generateHash(password);
-        await this.userRepository.save(user);
+        await this.usersRepository.save(user);
     }
 }
 

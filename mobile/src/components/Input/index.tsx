@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 
 import { useField } from '@unform/core';
-import { TextInputProperties, Animated } from 'react-native';
+import { TextInputProperties, Keyboard } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
 import { Tooltip } from 'react-native-elements';
@@ -28,7 +28,19 @@ interface InputRef {
     focus(): void;
 }
 
-// const FadeTooltip = Animated.createAnimatedComponent();
+const SetKeyboardState = (): boolean => {
+    const [keyboard, setKeyboard] = useState(false);
+
+    Keyboard.addListener('keyboardDidShow', () => {
+        setKeyboard(true);
+    });
+
+    Keyboard.addListener('keyboardDidHide', () => {
+        setKeyboard(false);
+    });
+
+    return keyboard;
+};
 
 const Input: React.RefForwardingComponent<InputRef, InputProps> = (
     { name, icon, ...rest },
@@ -122,3 +134,4 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
 };
 
 export default forwardRef(Input);
+export { SetKeyboardState };

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useEffect, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 
 import * as Yup from 'yup';
 
@@ -14,7 +14,6 @@ import {
     ScrollView,
     TextInput,
     Alert,
-    Keyboard,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
@@ -28,7 +27,7 @@ import {
     CreateAccountText,
 } from './styles';
 
-import Input from '../../components/Input';
+import Input, { SetKeyboardState } from '../../components/Input';
 import Button from '../../components/Button';
 
 import logoImg from '../../assets/logo.png';
@@ -90,16 +89,8 @@ const SignIn: React.FC = () => {
         [signIn],
     );
 
-    const [keyboard, setKeyboard] = useState(false);
-
-    useEffect(() => {
-        Keyboard.addListener('keyboardDidShow', () => {
-            setKeyboard(true);
-        });
-        Keyboard.addListener('keyboardDidHide', () => {
-            setKeyboard(false);
-        });
-    }, []);
+    const setKeyboardState = SetKeyboardState();
+    const keyboard = setKeyboardState;
 
     return (
         <>

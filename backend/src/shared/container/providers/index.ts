@@ -1,8 +1,26 @@
 import { container } from 'tsyringe';
 
-import IStorageFile from './Storage/model/IStorageFile';
-import DiskStorageFile from './Storage/implementations/DiskStorageFile';
+import IStorageFileProvider from './Storage/model/IStorageFileProvider';
+import DiskStorageFileProvider from './Storage/implementations/DiskStorageFileProvider';
 
-import IMail from './Mail/model/IMail';
+import IMailProvider from './Mail/model/IMailProvider';
+import EtherealMailProvider from './Mail/implementations/EtherealMailProvider';
 
-container.registerSingleton<IStorageFile>('StorageFile', DiskStorageFile);
+import IMailTemplateProvider from './MailTemplate/model/IMailTemplateProvider';
+import HandlebarsMailTemplateProvider from './MailTemplate/implementations/HandlebarsMailTemplateProvider';
+
+container.registerSingleton<IStorageFileProvider>(
+    'StorageFileProvider',
+    DiskStorageFileProvider,
+);
+
+container.registerSingleton<IMailTemplateProvider>(
+    'MailTemplateProvider',
+    HandlebarsMailTemplateProvider,
+);
+
+// registrar uma instancia chamando o constructor
+container.registerInstance<IMailProvider>(
+    'MailProvider',
+    container.resolve(EtherealMailProvider),
+);

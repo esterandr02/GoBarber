@@ -1,10 +1,11 @@
 import { uuid } from 'uuidv4';
-import { isEqual } from 'date-fns';
+import { isEqual, getMonth, getYear } from 'date-fns';
 
 import IAppointmentRepository from '@modules/appointments/repositories/IAppointmentsRepository';
-import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentDTO';
+import ICreateAppointmentsDTO from '@modules/appointments/dtos/ICreateAppointmentsDTO';
+import IListProviderDaysAvailableDTO from '@modules/appointments/dtos/IListProviderDaysAvailableDTO';
 
-import Appointment from '@modules/appointments/infra/typeorm/entities/Appointments';
+import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 
 class AppointmentsRepository implements IAppointmentRepository {
     private appointments: Appointment[] = [];
@@ -20,7 +21,7 @@ class AppointmentsRepository implements IAppointmentRepository {
     public async create({
         provider_id,
         date,
-    }: ICreateAppointmentDTO): Promise<Appointment> {
+    }: ICreateAppointmentsDTO): Promise<Appointment> {
         const appointment = new Appointment();
 
         Object.assign(appointment, { id: uuid(), date, provider_id });
@@ -29,7 +30,20 @@ class AppointmentsRepository implements IAppointmentRepository {
 
         return appointment;
     }
+
+    public async findDaysAvailableInMonth({
+        provider_id,
+        month,
+        year,
+    }: IListProviderDaysAvailableDTO): Promise<Appointment[]> {
+        const appointments = this.appointments.filter(
+            appointment =>
+                appointment.provider_id === provider_id &&
+                getMonth(appointment.date) + 1 === month &&
+                getYear(appointment.date) === year,
+        );
+        return appointments;
+    }
 }
-// O typeORM ja possui metodos basicos para criar, listar, deletar, etc
 
 export default AppointmentsRepository;

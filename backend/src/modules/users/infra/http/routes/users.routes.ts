@@ -6,13 +6,13 @@ import uploadConfig from '@config/upload';
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 
 import UsersController from '../controllers/UsersController';
-import UpdateAvatarController from '../controllers/UserAvatarController';
+import UsersAvatarController from '../controllers/UsersAvatarController';
 
 const usersRouter = Router();
 const upload = multer(uploadConfig);
 
 const usersController = new UsersController();
-const updateAvatarController = new UpdateAvatarController();
+const usersAvatarController = new UsersAvatarController();
 
 usersRouter.post('/', usersController.create);
 
@@ -20,7 +20,7 @@ usersRouter.patch(
     '/avatar',
     ensureAuthenticated,
     upload.single('avatar'),
-    updateAvatarController.update,
+    usersAvatarController.update,
 );
 
 export default usersRouter;

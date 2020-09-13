@@ -29,7 +29,5 @@ class User {
     @UpdateDateColumn()
     updated_at: Date;
 }
-// Nao e necessario um constructor, pois ja ha uma relacao de criacao no banco
-// Nao e necessario ter uma inicializacao dos models
 
 export default User;

@@ -1,28 +1,27 @@
 import { inject, injectable } from 'tsyringe';
+import path from 'path';
 
 import AppError from '@shared/errors/AppError';
 
-// import User from '@modules/users/infra/typeorm/entities/User';
-
-import IMail from '@shared/container/providers/Mail/model/IMail';
-import IUserRepository from '../repositories/IUserRepository';
-import IUserTokenRepository from '../repositories/IUserTokenRepository';
+import IMailProvider from '@shared/container/providers/Mail/model/IMailProvider';
+import IUsersRepository from '../repositories/IUsersRepository';
+import IUserTokensRepository from '../repositories/IUserTokensRepository';
 
 interface IRequest {
     email: string;
 }
 
 @injectable()
-class ForgotPasswordService {
+export default class ForgotPasswordService {
     constructor(
-        @inject('UserRepo')
-        private userRepository: IUserRepository,
+        @inject('UsersRepository')
+        private userRepository: IUsersRepository,
 
         @inject('MailProvider')
-        private mailProvider: IMail,
+        private mailProvider: IMailProvider,
 
-        @inject('UserTokenRepo')
-        private userTokenRepository: IUserTokenRepository,
+        @inject('UserTokensRepository')
+        private userTokensRepository: IUserTokensRepository,
     ) {}
 
     public async execute({ email }: IRequest): Promise<void> {
@@ -32,10 +31,28 @@ class ForgotPasswordService {
             throw new AppError('User does not exist !');
         }
 
-        await this.userTokenRepository.generate(user.id);
+        const { token } = await this.userTokensRepository.generate(user.id);
 
-        this.mailProvider.sendMail(email, 'recuperacao de senha');
+        const forgotPasswordEmailTemplate = path.resolve(
+            __dirname,
+            '..',
+            'views',
+            'forgot_password.hbs',
+        );
+
+        await this.mailProvider.sendMail({
+            to: {
+                name: user.name,
+                email: user.email,
+            },
+            subject: '[Go Barber] Recuperacao de Senha',
+            templateData: {
+                template_file: forgotPasswordEmailTemplate,
+                variables: {
+                    name: user.name,
+                    link: `http://localhost:3000/reset_password?token=${token}`,
+                },
+            },
+        });
     }
 }
-
-export default ForgotPasswordService;
