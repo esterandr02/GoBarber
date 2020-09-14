@@ -6,10 +6,10 @@ import IListProviderHoursAvailableDTO from '../dtos/IListProviderHoursAvailableD
 export default interface IAppointmentsRepository {
     create(data: ICreateAppointmentDTO): Promise<Appointment>;
     findByDate(date: Date): Promise<Appointment | undefined>;
-    findDaysAvailableInMonth(
+    findAllDaysInMonth(
         data: IListProviderDaysAvailableDTO,
     ): Promise<Appointment[]>;
-    findHoursAvailableInDay(
+    findAllHoursInDay(
         data: IListProviderHoursAvailableDTO,
     ): Promise<Appointment[]>;
 }

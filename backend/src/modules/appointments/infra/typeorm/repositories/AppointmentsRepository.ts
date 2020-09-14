@@ -16,9 +16,14 @@ export default class AppointmentsRepository implements IAppointmentsRepository {
 
     public async create({
         provider_id,
+        user_id,
         date,
     }: ICreateAppointmentsDTO): Promise<Appointment> {
-        const appointment = this.ormRepository.create({ provider_id, date });
+        const appointment = this.ormRepository.create({
+            provider_id,
+            user_id,
+            date,
+        });
 
         await this.ormRepository.save(appointment);
 
@@ -32,7 +37,7 @@ export default class AppointmentsRepository implements IAppointmentsRepository {
         return findAppointment;
     }
 
-    public async findDaysAvailableInMonth({
+    public async findAllDaysInMonth({
         provider_id,
         month,
         year,
@@ -52,7 +57,7 @@ export default class AppointmentsRepository implements IAppointmentsRepository {
         return appointments;
     }
 
-    public async findHoursAvailableInDay({
+    public async findAllHoursInDay({
         provider_id,
         day,
         month,
