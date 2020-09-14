@@ -81,7 +81,6 @@ describe('ResetPassword', () => {
 
         const { token } = await fakeTokensRepository.generate(user.id);
 
-        // trocamos uma funcao natural por uma customizada (setar 3 horas a mais)
         jest.spyOn(Date, 'now').mockImplementationOnce(() => {
             const customDate = new Date();
 
