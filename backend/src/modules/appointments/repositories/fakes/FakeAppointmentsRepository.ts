@@ -63,6 +63,12 @@ class AppointmentsRepository implements IAppointmentRepository {
         );
         return appointments;
     }
+
+    public async getAllAppointments(): Promise<Appointment[]> {
+        const { appointments } = this;
+
+        return appointments;
+    }
 }
 
 export default AppointmentsRepository;
