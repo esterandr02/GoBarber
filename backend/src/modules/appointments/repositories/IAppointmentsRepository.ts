@@ -12,4 +12,5 @@ export default interface IAppointmentsRepository {
     findAllHoursInDay(
         data: IListProviderHoursAvailableDTO,
     ): Promise<Appointment[]>;
+    getAllAppointments(): Promise<Appointment[]>;
 }
