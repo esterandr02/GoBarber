@@ -70,7 +70,7 @@ export default class CreateAppointmentsService {
 
         await this.notificationsRepository.create({
             content: `Novo agendamento criado para ${formattedDate}.`,
-            recipient_id: user_id,
+            recipient_id: provider_id,
         });
 
         return appointment;
