@@ -11,6 +11,7 @@ import IHashProvider from '../providers/Hash/model/IHashProvider';
 interface IRequest {
     token: string;
     password: string;
+    password_confirmation: string;
 }
 
 @injectable()
@@ -26,8 +27,18 @@ class ResetPasswordService {
         private hashProvider: IHashProvider,
     ) {}
 
-    public async execute({ token, password }: IRequest): Promise<void> {
+    public async execute({
+        token,
+        password,
+        password_confirmation,
+    }: IRequest): Promise<void> {
         const userToken = await this.userTokensRepository.findByToken(token);
+
+        if (password_confirmation !== password) {
+            throw new AppError(
+                'Password and password confirmation are different.',
+            );
+        }
 
         if (!userToken) {
             throw new AppError('Token does not exist');
