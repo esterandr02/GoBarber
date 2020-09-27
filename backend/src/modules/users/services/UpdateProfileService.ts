@@ -12,7 +12,6 @@ interface IRequest {
     name: string;
     email: string;
     old_password?: string;
-    password_confirmation?: string;
     new_password?: string;
 }
 
@@ -31,7 +30,6 @@ export default class UpdateUsersAvatarService {
         name,
         email,
         new_password,
-        password_confirmation,
         old_password,
     }: IRequest): Promise<User> {
         const user = await this.usersRepository.findById(user_id);
@@ -51,12 +49,6 @@ export default class UpdateUsersAvatarService {
         if (new_password) {
             if (!old_password) {
                 throw new AppError('Confirm old password is missing.');
-            }
-
-            if (new_password !== password_confirmation) {
-                throw new AppError(
-                    'New password and password confirmation are different.',
-                );
             }
 
             const isPasswordCorrect = await this.hashProvider.compareHash(
