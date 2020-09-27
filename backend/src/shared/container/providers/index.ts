@@ -1,10 +1,13 @@
 import { container } from 'tsyringe';
 
+import mailConfig from '@config/mail';
+
 import IStorageFileProvider from './Storage/model/IStorageFileProvider';
 import DiskStorageFileProvider from './Storage/implementations/DiskStorageFileProvider';
 
 import IMailProvider from './Mail/model/IMailProvider';
 import EtherealMailProvider from './Mail/implementations/EtherealMailProvider';
+import SESMailProvider from './Mail/implementations/SESMailProvider';
 
 import IMailTemplateProvider from './MailTemplate/model/IMailTemplateProvider';
 import HandlebarsMailTemplateProvider from './MailTemplate/implementations/HandlebarsMailTemplateProvider';
@@ -19,8 +22,9 @@ container.registerSingleton<IMailTemplateProvider>(
     HandlebarsMailTemplateProvider,
 );
 
-// registrar uma instancia chamando o constructor
 container.registerInstance<IMailProvider>(
     'MailProvider',
-    container.resolve(EtherealMailProvider),
+    mailConfig.driver === 'ethereal'
+        ? container.resolve(EtherealMailProvider)
+        : container.resolve(SESMailProvider),
 );
