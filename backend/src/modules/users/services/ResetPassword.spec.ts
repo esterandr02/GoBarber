@@ -13,7 +13,6 @@ let fakeHashProvider: FakeHashProvider;
 let resetPassword: ResetPasswordService;
 
 describe('ResetPassword', () => {
-    // executa antes de cada teste dessa categoria
     beforeEach(() => {
         fakeUsersRepository = new FakeUsersRepository();
         fakeTokensRepository = new FakeUserTokensRepository();

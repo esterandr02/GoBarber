@@ -12,7 +12,6 @@ let fakeTokens: FakeUserTokensRepository;
 let forgotpassword: ForgotPasswordService;
 
 describe('CreateUser', () => {
-    // executa antes de cada teste dessa categoria
     beforeEach(() => {
         fakeUsersRepository = new FakeUsersRepository();
         fakeMailProvider = new FakeMailProvider();
