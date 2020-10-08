@@ -45,7 +45,6 @@ describe('UpdateUserAvatar', () => {
     });
 
     it('Should delete old avatar when updating new one', async () => {
-        // spyOne: saber se um metodo foi disparado
         const deleteFile = jest.spyOn(fakeStorageFileProvider, 'deleteFile');
 
         const user = await fakeUsersRepository.create({

@@ -43,7 +43,6 @@ describe('AuthenticateUser', () => {
     });
 
     it('Should not be able to authenticate an nonexistent user', async () => {
-        // usuario nao criado
         await expect(
             authenticateUsers.execute({
                 email: 'johnDoe@gmail.com',
