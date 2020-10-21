@@ -2,11 +2,10 @@ import fs from 'fs';
 import path from 'path';
 
 import uploadConfig from '@config/upload';
-import IStorageFile from '../model/IStorageFile';
+import IStorageFile from '../model/IStorageFileProvider';
 
 export default class DiskStorageFile implements IStorageFile {
     public async saveFile(file: string): Promise<string> {
-        // rename: mover arquivos
         await fs.promises.rename(
             path.resolve(uploadConfig.tmpFolder, file),
             path.resolve(uploadConfig.uploadsFolder, file),
@@ -18,12 +17,11 @@ export default class DiskStorageFile implements IStorageFile {
         const findFile = path.resolve(uploadConfig.uploadsFolder, file);
 
         try {
-            // stat: buscar infos do arquivo
             await fs.promises.stat(findFile);
         } catch {
             return;
         }
-        // unlink: deletar o arquivo
+
         await fs.promises.unlink(findFile);
     }
 }
