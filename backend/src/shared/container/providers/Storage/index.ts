@@ -1,9 +1,11 @@
 import { container } from 'tsyringe';
 
+import uploagConfig from '@config/upload';
+
 import IStorageFileProvider from './model/IStorageFileProvider';
 
 import S3StorageProvider from './implementations/S3StorageProvider';
-import DiskStorageFileProvider from './implementations/DiskStorageFileProvider';
+import DiskStorageFileProvider from './implementations/DiskStorageProvider';
 
 const providers = {
     disk: DiskStorageFileProvider,
@@ -12,5 +14,5 @@ const providers = {
 
 container.registerSingleton<IStorageFileProvider>(
     'StorageFileProvider',
-    providers.s3,
+    providers[uploagConfig.driver],
 );
