@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import mime from 'mime';
 import aws, { S3 } from 'aws-sdk';
 
 import uploadConfig from '@config/upload';
@@ -17,31 +18,35 @@ export default class DiskStorageFile implements IStorageFile {
     public async saveFile(fileName: string): Promise<string> {
         const originalPath = path.resolve(uploadConfig.tmpFolder, fileName);
 
-        const fileContent = await fs.promises.readFile(originalPath, {
-            encoding: 'utf-8',
-        });
+        const ContentType = mime.getType(originalPath);
+
+        if (!ContentType) {
+            throw new Error('file not found.');
+        }
+
+        const fileContent = await fs.promises.readFile(originalPath);
 
         await this.client
             .putObject({
-                Bucket: 'ester-gobarber',
+                Bucket: uploadConfig.config.s3.bucket,
                 Key: fileName,
                 ACL: 'public-read',
                 Body: fileContent,
+                ContentType,
             })
             .promise();
+
+        await fs.promises.unlink(originalPath);
 
         return fileName;
     }
 
-    public async deleteFile(file: string): Promise<void> {
-        const findFile = path.resolve(uploadConfig.uploadsFolder, file);
-
-        try {
-            await fs.promises.stat(findFile);
-        } catch {
-            return;
-        }
-
-        await fs.promises.unlink(findFile);
+    public async deleteFile(fileName: string): Promise<void> {
+        await this.client
+            .deleteObject({
+                Bucket: uploadConfig.config.s3.bucket,
+                Key: fileName,
+            })
+            .promise();
     }
 }
